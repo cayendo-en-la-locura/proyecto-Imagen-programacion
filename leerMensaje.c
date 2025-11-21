@@ -135,7 +135,7 @@ RGB *leerDatosXY(const char *coordenasTXT, int numPixeles)
         exit(EXIT_FAILURE);
     }
 
-    RGB *arrASCII = (RGB *)malloc(numPixeles * sizeof(RGB)); // matriz de RGB de imagen_rgb.txt
+    RGB *arrASCII = (RGB *)malloc(numPixeles * sizeof(RGB)); // arreglo de RGB de coordenadas.txt
     if (arrASCII == NULL)
     {
         perror("Error de asignación de memoria para el arreglo");
@@ -150,11 +150,6 @@ RGB *leerDatosXY(const char *coordenasTXT, int numPixeles)
             exit(EXIT_FAILURE);
         }
     }
-
-    // for (int i = 0; i < numPixeles; i++)
-    // {
-    //     printf("(%d,%d)", arrASCII[i].x, arrASCII[i].y);
-    // }
 
     fclose(archivo);
     return arrASCII;
@@ -201,9 +196,11 @@ int main()
             // printf("\nCoordenadas fuera del rango %d*%d.\n", maxAleatorio, maxAleatorio);
         }
     }
-    char mensaje[243]; // IGUAL-MAIN
-    int c, k = 0;      // IGUAL-MAIN (C)
-    for (int i = 0; i < numPixeles; i++)
+
+    // LIMPIAR BUFFER
+    char mensaje[243];                   // IGUAL-MAIN  [0,1,2,3,4,5]
+    int c, k = 0;                        // IGUAL-MAIN (C)
+    for (int i = 0; i < numPixeles; i++) //(0,0,0) (0,0,0)
     {
         // printf("%c = %03d\n", arrASCIImensaje[i].r, arrASCIImensaje[i].r); // correspondencia de ASCII con mensaje
         // printf("%c = %03d\n", arrASCIImensaje[i].g, arrASCIImensaje[i].g); // correspondencia de ASCII con mensaje
