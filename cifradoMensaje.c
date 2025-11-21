@@ -184,7 +184,7 @@ int main()
         j++;
     }
 
-    printf("Valores ASCII como RGB:\n");
+    printf("\nValores ASCII como RGB:\n");
     for (int i = 0; i < numeroPixeles; i++)
     {
         printf("(%03d, %03d, %03d) ", arrMensajeRGB[i].r, arrMensajeRGB[i].g, arrMensajeRGB[i].b); // 000 001
@@ -227,35 +227,21 @@ int main()
     printf("\nCoordenadas generadas (únicas):\n");
     for (int i = 0; i < numeroPixeles; i++)
         printf("(%d, %d) ", arrMensajeRGB[i].x, arrMensajeRGB[i].y);
-
+    printf("\n");
     // -------------------------------------------------------------------------
 
     RGB **matrizImagenRGB = leerDatosRGB(imagenTXT, filas, columnas);
 
     for (int i = 0; i < numeroPixeles; i++)
     {
-        int x = arrMensajeRGB[i].x;
-        int y = arrMensajeRGB[i].y;
-
-        printf("\nPixel original en (%d,%d): RGB(%d,%d,%d)",
-               x, y,
-               matrizImagenRGB[y][x].r,
-               matrizImagenRGB[y][x].g,
-               matrizImagenRGB[y][x].b);
-
+        int x = arrMensajeRGB[i].x, y = arrMensajeRGB[i].y;
+        printf("\nPixel original en (%d,%d): RGB(%d,%d,%d)", x, y, matrizImagenRGB[y][x].r, matrizImagenRGB[y][x].g, matrizImagenRGB[y][x].b);
         matrizImagenRGB[y][x].r = arrMensajeRGB[i].r;
         matrizImagenRGB[y][x].g = arrMensajeRGB[i].g;
         matrizImagenRGB[y][x].b = arrMensajeRGB[i].b;
-
-        printf("\nNuevo pixel en (%d,%d): RGB(%d,%d,%d)\n",
-               x, y,
-               matrizImagenRGB[y][x].r,
-               matrizImagenRGB[y][x].g,
-               matrizImagenRGB[y][x].b);
+        printf("\nNuevo pixel en (%d,%d): RGB(%d,%d,%d)\n", x, y, matrizImagenRGB[y][x].r, matrizImagenRGB[y][x].g, matrizImagenRGB[y][x].b);
     }
-
     //----------------------------------------------------------------------------------
-
     fclose(fopen("imagen_rgb.txt", "w")); // abre y cierra el documento, eliminando el contenido
 
     FILE *archivoImagen = fopen("imagen_rgb.txt", "w");
@@ -286,7 +272,7 @@ int main()
 
     for (int i = 0; i < numeroPixeles; i++)
     {
-        fprintf(archivoCoordenadas, "(%d,%d) ", arrMensajeRGB[i].y, arrMensajeRGB[i].x);
+        fprintf(archivoCoordenadas, "(%d,%d) ", arrMensajeRGB[i].x, arrMensajeRGB[i].y);
     }
 
     fclose(archivoCoordenadas);
@@ -317,17 +303,14 @@ int main()
 
     for (int i = 0; i < numPixeles; i++)
     {
-        if ((arrASCIImensaje[i].y >= 0 && arrASCIImensaje[i].y < filas) && (arrASCIImensaje[i].x >= 0 && arrASCIImensaje[i].x < columnas))
+        int x = arrASCIImensaje[i].x, y = arrASCIImensaje[i].y;
+        if ((y >= 0 && y < filas) && (x >= 0 && x < columnas))
         {
-            printf("\nEl pixel en la coordenada (%d, %d) es: RGB(%d, %d, %d)", arrASCIImensaje[i].x, arrASCIImensaje[i].y, matrizImagenRGB2[arrASCIImensaje[i].x][arrASCIImensaje[i].y].r, matrizImagenRGB2[arrASCIImensaje[i].x][arrASCIImensaje[i].y].g, matrizImagenRGB2[arrASCIImensaje[i].x][arrASCIImensaje[i].y].b);
-            arrASCIImensaje[i].r = matrizImagenRGB2[arrASCIImensaje[i].x][arrASCIImensaje[i].y].r;
-            arrASCIImensaje[i].g = matrizImagenRGB2[arrASCIImensaje[i].x][arrASCIImensaje[i].y].g;
-            arrASCIImensaje[i].b = matrizImagenRGB2[arrASCIImensaje[i].x][arrASCIImensaje[i].y].b;
+            printf("\nEl pixel en la coordenada (%d, %d) es: RGB(%d, %d, %d)", x, y, matrizImagenRGB2[y][x].r, matrizImagenRGB2[y][x].g, matrizImagenRGB2[y][x].b);
+            arrASCIImensaje[i].r = matrizImagenRGB2[y][x].r;
+            arrASCIImensaje[i].g = matrizImagenRGB2[y][x].g;
+            arrASCIImensaje[i].b = matrizImagenRGB2[y][x].b;
             printf("\nEl pixel guardado en la posición %d arrASCIImensaje es: RGB(%d, %d, %d)\n", i, arrASCIImensaje[i].r, arrASCIImensaje[i].g, arrASCIImensaje[i].b);
-        }
-        else
-        {
-            // coordenada fuera de rango
         }
     }
 
@@ -354,8 +337,6 @@ int main()
     }
     free(matrizImagenRGB2);
     free(arrASCIImensaje);
-
-    /* === FIN PARTE 2: recuperar mensaje === */
 
     return 0;
 }
