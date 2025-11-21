@@ -173,7 +173,7 @@ int main()
 
     int maxAleatorio = (filas > columnas) ? columnas - 1 : filas - 1; // guarda el valor menor entre columa o fila en maxAleatorio. Coordenadas aleatorias dentro de un rango mm o nn.
     //--------------------------------------------------------------------------------
-    srand(time(NULL));
+    srand(time(NULL)); // semilla
 
     printf("\nGenerando %d coordenadas aleatorias entre 0 y %d:", numeroPixeles, maxAleatorio);
 
@@ -203,11 +203,11 @@ int main()
         {
             // RGB pixel = matrizImagenRGB[arrMensajeRGB[i].x][arrMensajeRGB[i].y]; // va al pixel en la matriz segun la coordenada en arrMensajeRGB  pixel.r
             printf("\nEl pixel en la coordenada (%d, %d) es: RGB(%d, %d, %d)", arrMensajeRGB[i].x, arrMensajeRGB[i].y, matrizImagenRGB[arrMensajeRGB[i].x][arrMensajeRGB[i].y].r, matrizImagenRGB[arrMensajeRGB[i].x][arrMensajeRGB[i].y].g, matrizImagenRGB[arrMensajeRGB[i].x][arrMensajeRGB[i].y].b);
-            matrizImagenRGB[arrMensajeRGB[i].x][arrMensajeRGB[i].y].r = arrMensajeRGB[i].r;
+            matrizImagenRGB[arrMensajeRGB[i].x][arrMensajeRGB[i].y].r = arrMensajeRGB[i].r; //                         matrizImagenRGB[xy].r
             matrizImagenRGB[arrMensajeRGB[i].x][arrMensajeRGB[i].y].g = arrMensajeRGB[i].g;
             matrizImagenRGB[arrMensajeRGB[i].x][arrMensajeRGB[i].y].b = arrMensajeRGB[i].b;
             printf("\nEl NUEVO pixel en la coordenada (%d, %d) es: RGB(%d, %d, %d)\n", arrMensajeRGB[i].x, arrMensajeRGB[i].y, matrizImagenRGB[arrMensajeRGB[i].x][arrMensajeRGB[i].y].r, matrizImagenRGB[arrMensajeRGB[i].x][arrMensajeRGB[i].y].g, matrizImagenRGB[arrMensajeRGB[i].x][arrMensajeRGB[i].y].b);
-        }
+        } // blur box
         else
         {
             printf("\nCoordenadas fuera del rango %d*%d.\n", maxAleatorio, maxAleatorio);
@@ -250,9 +250,13 @@ int main()
     }
 
     fclose(archivoCoordenadas);
-    //----------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------- LIBERAR MEMEMORIA
     free(matrizImagenRGB);
-    free(arrMensajeRGB);
+    free(arrMensajeRGB); // liberear la memeoria de matriz y el arreglo
 
     return 0;
+}
+
+void ingresarmensaje()
+{
 }
