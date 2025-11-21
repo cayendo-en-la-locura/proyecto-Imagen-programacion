@@ -3,6 +3,12 @@
 #include <stdlib.h>
 #include <time.h>
 
+char mensaje[243];
+int filas, columnas;
+const char *imagenTXT = "imagen_rgb.txt";
+int numPixeles;
+const char *coordenasTXT = "coordenadas.txt";
+
 typedef struct
 {
     int r, g, b, x, y;
@@ -152,10 +158,67 @@ RGB *leerDatosXY(const char *coordenasTXT, int numPixeles)
     fclose(archivo);
     return arrASCII;
 }
-// main juntos
+
+void limpiarBuffer()
+{
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF)
+        ;
+}
+
+enum opciones
+{
+    Ingresar = 1,
+    Leer,
+    Salir
+};
+
+void ingresarMensaje();
+
+void leerMensaje();
+
 int main()
 {
-    char mensaje[243];
+    int opcion;
+    char repetir;
+
+    do
+    {
+        printf("--------MENU--------\n");
+        printf("1. Ingresar un mensaje\n");
+        printf("2. Leer mensaje\n");
+        printf("3. Salir\n");
+        printf("Seleccione una opción: ");
+        scanf("%d", &opcion);
+        limpiarBuffer();
+
+        switch (opcion)
+        {
+        case Ingresar:
+            ingresarMensaje();
+            break;
+        case Leer:
+            leerMensaje();
+            break;
+        case Salir:
+            printf("Saliendo del programa...");
+            return 0;
+        default:
+            printf("Opcion invalida. Intente de nuevo.\n");
+        }
+
+        printf("¿Desea volver al menu? (s/n): ");
+        scanf("%c", &repetir);
+        limpiarBuffer();
+    } while (repetir == 's' || repetir == 'S');
+
+    printf("Programa finalizado.");
+    return 0;
+}
+
+void ingresarMensaje()
+{
+    printf("ingreso\n");
     printf("Escribe tu mensaje (hasta 243 caracteres, sin acentos): ");
 
     fgets(mensaje, sizeof(mensaje), stdin);
@@ -189,10 +252,6 @@ int main()
     {
         printf("(%03d, %03d, %03d) ", arrMensajeRGB[i].r, arrMensajeRGB[i].g, arrMensajeRGB[i].b); // 000 001
     }
-
-    //-------------------------------------------------------------------------------
-    int filas, columnas;
-    const char *imagenTXT = "imagen_rgb.txt";
 
     obtenerDimensionesRGB(imagenTXT, &filas, &columnas);
 
@@ -283,12 +342,11 @@ int main()
     for (int i = 0; i < filas; i++)
         free(matrizImagenRGB[i]);
     free(matrizImagenRGB);
+}
 
-    ////////////////////////////////////////////////////// PARTE 2: LEER LA IMAGEN //////////////////////////////////////////////////////
-
-    int numPixeles;
-    const char *coordenasTXT = "coordenadas.txt";
-
+void leerMensaje()
+{
+    printf("leer\n");
     obtenerDimensionesXY(coordenasTXT, &numPixeles);
     //----------------------------------------------------------------------------------
 
@@ -337,6 +395,4 @@ int main()
     }
     free(matrizImagenRGB2);
     free(arrASCIImensaje);
-
-    return 0;
 }
