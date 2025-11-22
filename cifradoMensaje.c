@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-char mensaje[243];
+char mensaje[243]; // {(000,000,000),(000,000,000)...}
 int filas, columnas;
 const char *imagenTXT = "imagen_rgb.txt";
 int numPixeles;
@@ -130,7 +130,7 @@ RGB **leerDatosRGB(const char *imagenTXT, int filas, int columnas)
     return imagenRGB;
 }
 
-RGB *leerDatosXY(const char *coordenasTXT, int numPixeles)
+RGB *leerDatosXY(const char *coordenasTXT, int numPixeles) // Kenia
 {
     FILE *archivo = fopen(coordenasTXT, "r");
     if (archivo == NULL)
@@ -173,6 +173,52 @@ enum opciones
     Salir
 };
 
+void blurAlredPonderado(RGB **img, int filas, int columnas, int x, int y, float pesoCentral) // Pauli
+{
+    RGB central = img[y][x];
+
+    int inicioX = (x > 0) ? x - 1 : x;
+    int finX = (x < columnas - 1) ? x + 1 : x;
+    int inicioY = (y > 0) ? y - 1 : y;
+    int finY = (y < filas - 1) ? y + 1 : y;
+
+    float sumaR = central.r * pesoCentral;
+    float sumaG = central.g * pesoCentral;
+    float sumaB = central.b * pesoCentral;
+    float count = pesoCentral;
+
+    // sumar vecinos
+    for (int i = inicioY; i <= finY; i++)
+    {
+        for (int j = inicioX; j <= finX; j++)
+        {
+            if (i == y && j == x)
+                continue;
+            sumaR += img[i][j].r;
+            sumaG += img[i][j].g;
+            sumaB += img[i][j].b;
+            count += 1.0f;
+        }
+    }
+
+    int promR = sumaR / count;
+    int promG = sumaG / count;
+    int promB = sumaB / count;
+
+    // asigna el promedio a los vecinos
+    for (int i = inicioY; i <= finY; i++)
+    {
+        for (int j = inicioX; j <= finX; j++)
+        {
+            if (i == y && j == x)
+                continue;
+            img[i][j].r = promR;
+            img[i][j].g = promG;
+            img[i][j].b = promB;
+        }
+    }
+}
+
 void ingresarMensaje();
 
 void leerMensaje();
@@ -182,13 +228,17 @@ int main()
     int opcion;
     char repetir;
 
+    printf("\n\tInstrucciones: \n\t\tTener todo los archivos en la misma carpeta\n\t\tNombrar la imagen en donde se pondrá el mensaje como \"imagen_original.png\"\n\t\tRecuerde guardar la imagen con el mensaje como \"imagen_mensaje.png\": \n\n");
+    printf("\tFormas de uso (ejecute los programas en la terminal): \n\t    [A] Ingresar un mensaje en una imagen y leerlo inmediatamente\n\t\t1. imagen_original.py\n\t\t2. mensajeCifrado.c (opción 1 y 2) \n\t\t3. recronstruir_desdetxt.py \n\n");
+    printf("\t    [B] Leer una imagen con su archivo de coordenadas\n\t\t1. imagen_mensaje.py\n\t\t2. mensajeCifrado.c (opción 2) \n");
+
     do
     {
-        printf("--------MENU--------\n");
-        printf("1. Ingresar un mensaje\n");
-        printf("2. Leer mensaje\n");
-        printf("3. Salir\n");
-        printf("Seleccione una opción: ");
+        printf("\n\t--------MENU--------\n");
+        printf("\t1. Ingresar un mensaje\n");
+        printf("\t2. Leer mensaje\n");
+        printf("\t3. Salir\n");
+        printf("\tSeleccione una opción: ");
         scanf("%d", &opcion);
         limpiarBuffer();
 
@@ -201,25 +251,25 @@ int main()
             leerMensaje();
             break;
         case Salir:
-            printf("Saliendo del programa...");
+            printf("\n\t⇉ Saliendo del programa...\n");
             return 0;
         default:
-            printf("Opcion invalida. Intente de nuevo.\n");
+            printf("\n\tOpcion invalida. Intente de nuevo.\n");
         }
 
-        printf("¿Desea volver al menu? (s/n): ");
+        printf("\n\t↳ ¿Desea volver al menu? (s/n): ");
         scanf("%c", &repetir);
         limpiarBuffer();
     } while (repetir == 's' || repetir == 'S');
 
-    printf("Programa finalizado.");
+    printf("\n\t⇉ Programa finalizado.\n");
     return 0;
 }
 
 void ingresarMensaje()
 {
-    printf("ingreso\n");
-    printf("Escribe tu mensaje (hasta 243 caracteres, sin acentos): ");
+    printf("\n\t--------INGRESO--------\n");
+    printf("\tEscribe tu mensaje (hasta 243 caracteres, sin acentos): ");
 
     fgets(mensaje, sizeof(mensaje), stdin);
     mensaje[strcspn(mensaje, "\n")] = '\0'; // sustituir salto de línea con valor nulo
@@ -227,10 +277,10 @@ void ingresarMensaje()
 
     for (int i = 0; i < longitudMensaje; i++)
     {
-        printf("%c = %03d\n", mensaje[i], mensaje[i]); // correspondencia de mensaje con valor ASCII
+        printf("\t%c = %03d\n", mensaje[i], mensaje[i]); // correspondencia de mensaje con valor ASCII
     }
 
-    int numeroPixeles = (longitudMensaje + 2) / 3;
+    int numeroPixeles = (longitudMensaje + 2) / 3; // monse
     RGB *arrMensajeRGB = (RGB *)malloc(numeroPixeles * sizeof(RGB));
     if (arrMensajeRGB == NULL)
     {
@@ -247,15 +297,13 @@ void ingresarMensaje()
         j++;
     }
 
-    printf("\nValores ASCII como RGB:\n");
+    printf("\n\tMensaje traducido a ASCII como tupla RGB:\n\t");
     for (int i = 0; i < numeroPixeles; i++)
     {
         printf("(%03d, %03d, %03d) ", arrMensajeRGB[i].r, arrMensajeRGB[i].g, arrMensajeRGB[i].b); // 000 001
     }
 
     obtenerDimensionesRGB(imagenTXT, &filas, &columnas);
-
-    (filas > 0 && columnas > 0) ? printf("\n\nDimensiones de la imagen:\nFilas = %d, Columnas = %d\n", filas, columnas) : printf("No se pudieron determinar las dimensiones del archivo.\n");
 
     int maxAleatorio = (filas > columnas) ? columnas - 1 : filas - 1; // guarda el valor menor entre columa o fila en maxAleatorio. Coordenadas aleatorias dentro de un rango mm o nn.
     //--------------------------------------------------------------------------------
@@ -283,25 +331,27 @@ void ingresarMensaje()
         arrMensajeRGB[i].y = y;
     }
 
-    printf("\nCoordenadas generadas (únicas):\n");
-    for (int i = 0; i < numeroPixeles; i++)
-        printf("(%d, %d) ", arrMensajeRGB[i].x, arrMensajeRGB[i].y);
-    printf("\n");
     // -------------------------------------------------------------------------
 
     RGB **matrizImagenRGB = leerDatosRGB(imagenTXT, filas, columnas);
-
-    for (int i = 0; i < numeroPixeles; i++)
+    printf("\n");
+    for (int i = 0; i < numeroPixeles; i++) // Kenia
     {
         int x = arrMensajeRGB[i].x, y = arrMensajeRGB[i].y;
-        printf("\nPixel original en (%d,%d): RGB(%d,%d,%d)", x, y, matrizImagenRGB[y][x].r, matrizImagenRGB[y][x].g, matrizImagenRGB[y][x].b);
         matrizImagenRGB[y][x].r = arrMensajeRGB[i].r;
         matrizImagenRGB[y][x].g = arrMensajeRGB[i].g;
         matrizImagenRGB[y][x].b = arrMensajeRGB[i].b;
-        printf("\nNuevo pixel en (%d,%d): RGB(%d,%d,%d)\n", x, y, matrizImagenRGB[y][x].r, matrizImagenRGB[y][x].g, matrizImagenRGB[y][x].b);
+        printf("\n\tPixel (%d,%d) actualizado como: RGB(%d,%d,%d)", x, y, matrizImagenRGB[y][x].r, matrizImagenRGB[y][x].g, matrizImagenRGB[y][x].b);
     }
+    printf("\n");
+    float pesoCentral = .2; // se aplica el blur, con el central teniendo .2 veces más peso que un vecino normal
+    for (int i = 0; i < numeroPixeles; i++)
+    {
+        blurAlredPonderado(matrizImagenRGB, filas, columnas, arrMensajeRGB[i].x, arrMensajeRGB[i].y, pesoCentral); // Pauli
+    }
+
     //----------------------------------------------------------------------------------
-    fclose(fopen("imagen_rgb.txt", "w")); // abre y cierra el documento, eliminando el contenido
+    fclose(fopen("imagen_rgb.txt", "w")); // abre y cierra el documento, eliminando el contenido Alondra
 
     FILE *archivoImagen = fopen("imagen_rgb.txt", "w");
     if (archivoImagen == NULL)
@@ -346,29 +396,25 @@ void ingresarMensaje()
 
 void leerMensaje()
 {
-    printf("leer\n");
+    printf("\n\t--------LECTURA--------\n");
     obtenerDimensionesXY(coordenasTXT, &numPixeles);
     //----------------------------------------------------------------------------------
 
     obtenerDimensionesRGB(imagenTXT, &filas, &columnas);
-
-    (filas > 0 && columnas > 0) ? printf("\n\nDimensiones de la imagen:\nFilas = %d, Columnas = %d\n", filas, columnas) : printf("No se pudieron determinar las dimensiones del archivo.\n");
-
     //----------------------------------------------------------------------------------
 
-    RGB **matrizImagenRGB2 = leerDatosRGB(imagenTXT, filas, columnas);
-    RGB *arrASCIImensaje = leerDatosXY(coordenasTXT, numPixeles);
+    RGB **matrizImagenRGB2 = leerDatosRGB(imagenTXT, filas, columnas); // Monse
+    RGB *arrASCIImensaje = leerDatosXY(coordenasTXT, numPixeles);      // Monse
 
     for (int i = 0; i < numPixeles; i++)
     {
         int x = arrASCIImensaje[i].x, y = arrASCIImensaje[i].y;
         if ((y >= 0 && y < filas) && (x >= 0 && x < columnas))
         {
-            printf("\nEl pixel en la coordenada (%d, %d) es: RGB(%d, %d, %d)", x, y, matrizImagenRGB2[y][x].r, matrizImagenRGB2[y][x].g, matrizImagenRGB2[y][x].b);
             arrASCIImensaje[i].r = matrizImagenRGB2[y][x].r;
             arrASCIImensaje[i].g = matrizImagenRGB2[y][x].g;
             arrASCIImensaje[i].b = matrizImagenRGB2[y][x].b;
-            printf("\nEl pixel guardado en la posición %d arrASCIImensaje es: RGB(%d, %d, %d)\n", i, arrASCIImensaje[i].r, arrASCIImensaje[i].g, arrASCIImensaje[i].b);
+            printf("\n\tEl pixel guardado en la posición %d arrASCIImensaje es: RGB(%d, %d, %d)", i, arrASCIImensaje[i].r, arrASCIImensaje[i].g, arrASCIImensaje[i].b);
         }
     }
 
@@ -381,7 +427,7 @@ void leerMensaje()
         mensaje[k + 2] = (char)arrASCIImensaje[i].b;
         k += 3;
     }
-    printf("\nMensaje: ");
+    printf("\n\n\t▶ Mensaje: ");
     for (int i = 0; i < (numPixeles * 3); i++)
     {
         printf("%c", mensaje[i]);
@@ -389,7 +435,7 @@ void leerMensaje()
     printf("\n");
 
     // liberar memoria usada en la parte de extracción
-    for (int i = 0; i < filas; i++)
+    for (int i = 0; i < filas; i++) // Monse
     {
         free(matrizImagenRGB2[i]);
     }
