@@ -16,3 +16,6 @@ Formas de uso (ejecute los programas en la terminal):
    >\[B\] Leer una imagen con su archivo de coordenadas
    >1. `imagen_mensaje.py`  
    >2. `mensajeCifrado.c` (opción 2\)
+
+Diagrama de funcionamiento del programa:
+<img width="1920" height="1080" alt="Slide 16_9 - 1(1)" src="https://github.com/user-attachments/assets/6dee5897-2927-4a1a-a9ae-12d7a0458599" />
