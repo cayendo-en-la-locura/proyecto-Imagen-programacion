@@ -2,9 +2,9 @@
 Proyecto final de fundamentos de porgramación
 Instrucciones:   
 
->- Tener todo los archivos en la misma carpeta   
->- Nombrar la imagen en donde se pondrá el mensaje como "imagen\_original.png"   
->- Recuerde guardar la imagen con el mensaje como "imagen\_mensaje.png"
+>- Descargue la carpeta zip de la rama main
+>- En caso de querar utilizar una imagen diferente, renombre su imagen a "imagen\_original.png"   
+>- La imagen con el mensaje se guadará como "imagen\_mensaje.png" automáticamente
 
 Formas de uso (ejecute los programas en la terminal):  
 > \[A\]  Ingresar un mensaje en una imagen y leerlo inmediatamente
@@ -18,4 +18,5 @@ Formas de uso (ejecute los programas en la terminal):
    >2. `mensajeCifrado.c` (opción 2\)
 
 Diagrama de funcionamiento del programa:
+
 <img width="960" height="540" alt="Slide 16_9 - 1(1)" src="https://github.com/user-attachments/assets/6dee5897-2927-4a1a-a9ae-12d7a0458599" />
