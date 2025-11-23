@@ -14,8 +14,6 @@ typedef struct
     int r, g, b, x, y;
 } RGB;
 
-/// funciones compartidas o únicas
-
 int aleatorioHastaMax(int min, int max)
 {
     return rand() % (max - min + 1) + min;
@@ -228,9 +226,19 @@ int main()
     int opcion;
     char repetir;
 
-    printf("\n\tInstrucciones: \n\t\tTener todo los archivos en la misma carpeta\n\t\tNombrar la imagen en donde se pondrá el mensaje como \"imagen_original.png\"\n\t\tRecuerde guardar la imagen con el mensaje como \"imagen_mensaje.png\": \n\n");
-    printf("\tFormas de uso (ejecute los programas en la terminal): \n\t    [A] Ingresar un mensaje en una imagen y leerlo inmediatamente\n\t\t1. imagen_original.py\n\t\t2. mensajeCifrado.c (opción 1 y 2) \n\t\t3. recronstruir_desdetxt.py \n\n");
-    printf("\t    [B] Leer una imagen con su archivo de coordenadas\n\t\t1. imagen_mensaje.py\n\t\t2. mensajeCifrado.c (opción 2) \n");
+    printf("\n\tInstrucciones: \n"
+           "\t\tTener todo los archivos en la misma carpeta\n"
+           "\t\tNombrar la imagen en donde se pondrá el mensaje como \"imagen_original.png\"\n"
+           "\t\tRecuerde guardar la imagen con el mensaje como \"imagen_mensaje.png\": \n\n");
+
+    printf("\tFormas de uso (ejecute los programas en la terminal): \n"
+           "\t    [A] Ingresar un mensaje en una imagen y leerlo inmediatamente\n"
+           "\t\t1. imagen_original.py\n"
+           "\t\t2. mensajeCifrado.c (opción 1 y 2)\n"
+           "\t\t3. recronstruir_desdetxt.py \n\n");
+    printf("\t    [B] Leer una imagen con su archivo de coordenadas\n"
+           "\t\t1. imagen_mensaje.py\n"
+           "\t\t2. mensajeCifrado.c (opción 2)\n");
 
     do
     {
@@ -305,7 +313,6 @@ void ingresarMensaje()
 
     obtenerDimensionesRGB(imagenTXT, &filas, &columnas);
 
-    int maxAleatorio = (filas > columnas) ? columnas - 1 : filas - 1; // guarda el valor menor entre columa o fila en maxAleatorio. Coordenadas aleatorias dentro de un rango mm o nn.
     //--------------------------------------------------------------------------------
     srand(time(NULL));
 
@@ -325,7 +332,6 @@ void ingresarMensaje()
             y = aleatorioHastaMax(0, filas - 1);
             index = y * columnas + x;
         } while (usados[index] == 1);
-
         usados[index] = 1;
         arrMensajeRGB[i].x = x;
         arrMensajeRGB[i].y = y;
@@ -341,7 +347,11 @@ void ingresarMensaje()
         matrizImagenRGB[y][x].r = arrMensajeRGB[i].r;
         matrizImagenRGB[y][x].g = arrMensajeRGB[i].g;
         matrizImagenRGB[y][x].b = arrMensajeRGB[i].b;
-        printf("\n\tPixel (%d,%d) actualizado como: RGB(%d,%d,%d)", x, y, matrizImagenRGB[y][x].r, matrizImagenRGB[y][x].g, matrizImagenRGB[y][x].b);
+        printf("\n\tPixel (%d,%d) actualizado como: RGB(%d,%d,%d)",
+               x, y,
+               matrizImagenRGB[y][x].r,
+               matrizImagenRGB[y][x].g,
+               matrizImagenRGB[y][x].b);
     }
     printf("\n");
     float pesoCentral = .2; // se aplica el blur, con el central teniendo .2 veces más peso que un vecino normal
@@ -349,7 +359,6 @@ void ingresarMensaje()
     {
         blurAlredPonderado(matrizImagenRGB, filas, columnas, arrMensajeRGB[i].x, arrMensajeRGB[i].y, pesoCentral); // Pauli
     }
-
     //----------------------------------------------------------------------------------
     fclose(fopen("imagen_rgb.txt", "w")); // abre y cierra el documento, eliminando el contenido Alondra
 
@@ -364,7 +373,10 @@ void ingresarMensaje()
     {
         for (int j = 0; j < columnas; j++)
         {
-            fprintf(archivoImagen, "(%d,%d,%d) ", matrizImagenRGB[i][j].r, matrizImagenRGB[i][j].g, matrizImagenRGB[i][j].b);
+            fprintf(archivoImagen, "(%d,%d,%d) ",
+                    matrizImagenRGB[i][j].r,
+                    matrizImagenRGB[i][j].g,
+                    matrizImagenRGB[i][j].b);
         }
         fprintf(archivoImagen, "\n");
     }
@@ -398,8 +410,6 @@ void leerMensaje()
 {
     printf("\n\t--------LECTURA--------\n");
     obtenerDimensionesXY(coordenasTXT, &numPixeles);
-    //----------------------------------------------------------------------------------
-
     obtenerDimensionesRGB(imagenTXT, &filas, &columnas);
     //----------------------------------------------------------------------------------
 
@@ -414,7 +424,11 @@ void leerMensaje()
             arrASCIImensaje[i].r = matrizImagenRGB2[y][x].r;
             arrASCIImensaje[i].g = matrizImagenRGB2[y][x].g;
             arrASCIImensaje[i].b = matrizImagenRGB2[y][x].b;
-            printf("\n\tEl pixel guardado en la posición %d arrASCIImensaje es: RGB(%d, %d, %d)", i, arrASCIImensaje[i].r, arrASCIImensaje[i].g, arrASCIImensaje[i].b);
+            printf("\n\tEl pixel guardado en la posición %d arrASCIImensaje es: RGB(%d, %d, %d)",
+                   i,
+                   arrASCIImensaje[i].r,
+                   arrASCIImensaje[i].g,
+                   arrASCIImensaje[i].b);
         }
     }
 
