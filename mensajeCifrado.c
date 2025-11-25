@@ -354,7 +354,7 @@ void ingresarMensaje()
                matrizImagenRGB[y][x].b);
     }
     printf("\n");
-    float pesoCentral = .2; // se aplica el blur, con el central teniendo .2 veces más peso que un vecino normal
+    float pesoCentral = 3.0; // se aplica el blur, con el central teniendo .2 veces más peso que un vecino normal MAYOR PARA DEMOSTRACIÓN
     for (int i = 0; i < numeroPixeles; i++)
     {
         blurAlredPonderado(matrizImagenRGB, filas, columnas, arrMensajeRGB[i].x, arrMensajeRGB[i].y, pesoCentral); // Pauli
@@ -456,3 +456,4 @@ void leerMensaje()
     free(matrizImagenRGB2);
     free(arrASCIImensaje);
 }
+
